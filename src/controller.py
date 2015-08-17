@@ -20,12 +20,12 @@ def screenshotToGrid(screenshot):
     return grid
 
 
-def performMatch(grid):
+def performMatch(grid, gameRunning=True):
     matchFound, dragFromTile, dragToTile = matcher.findMatch(grid)
     print("matchFound: ", matchFound)
     print("dragFromTile: ", dragFromTile)
     print("dragToTile: ", dragToTile)
-    if matchFound:
+    if matchFound and gameRunning:
         ioFacade.autoGuiMouseDrag(
                 ioFacade.getTilePosition(dragFromTile),
                 ioFacade.getTilePosition(dragToTile))
@@ -40,6 +40,6 @@ if __name__ == '__main__':
         ss = screenshotToGrid(ssLib.getPretendScreenshot("../img/sweet.png"))
     print("GRID BEFORE CHANGE")
     gD.prettyPrintGrid(gD.rgb_to_tile_names(ss))
-    performMatch(ss)
+    performMatch(ss, gameRunning)
     time.sleep(0.1)
     ioFacade.switchFocus()
