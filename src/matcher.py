@@ -92,7 +92,7 @@ def findMatch(grid, rowWidth=data.gridwidth, colHeight=data.gridheight):
     """
     # First check the set of horizontal shifts for possible matches
     
-    for row in range(colHeight):
+    for row in reversed(range(colHeight)):
         for pos in range(rowWidth - 1):
             alteredCopyOfGrid = shiftRowByN(data.copyList(grid),
                     row,

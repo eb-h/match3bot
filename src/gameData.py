@@ -5,26 +5,34 @@ gridwidth, gridheight = 8, 7
 originX, originY = 300, 180
 imagewidth, imageheight = 1000 - originX, 800 - originY
 
-tileColors = {'staff': (193, 41, 32), 
-                'sword': (109, 140, 175),
-                'key': (103, 186, 117),
-                'wood': (171, 147, 122),
-                'shield': (47, 117, 101),
-                'stone': (110, 123, 145),
-                'chest': (197, 136, 213)}
+tileColors = {'staff': {(193, 41, 32)}, 
+                'sword': {(109, 140, 175)},
+                'key': {(103, 186, 117)},
+                'wood': {(171, 147, 122)},
+                'shield': {(47, 117, 101)},
+                'stone': {(110, 123, 145)},
+                'chest': {(197, 136, 213)}}
+
+
+def tileColorsHasRepeats():
+    li = []
+    for tile_name, listOfrgbVals in tileColors.items():
+        for rgbVal in listOfrgbVals:
+            li.append(rgbVal)
+    if len(li)!=len(set(li)):
+        return True
+    return False
 
 
 def rgb_to_tile_names(pixels):
     copy = pixels
     for i, item in enumerate(pixels):
-        #valFound = False
-        for tile_name, rgbVal in tileColors.items():
-            if item == rgbVal:
+        for tile_name, listOfrgbVals in tileColors.items():
+
+            if item in listOfrgbVals:
                 copy[i] = tile_name
                 valFound = True
                 break
-        #if valFound == False:
-            #copy[i] = "UNKNOWN"
     return copy
 
 
@@ -46,3 +54,5 @@ def prettyPrintGrid(grid):
 def copyList(li):
     return list(li)
 
+if __name__ == '__main__':
+    print("tileColors has duplicates? ", tileColorsHasRepeats())
