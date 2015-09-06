@@ -34,12 +34,24 @@ if __name__ == '__main__':
     gameRunning = True
     ss = None
     li = []
+    allowedNumberOfRetries = 5
+    retryCount = 0
+    allowedNumberOfUnknowns = 10
     if gameRunning:
         ss = screenshotToGrid(screenshotOfGameGrid())
     else:
         ss = screenshotToGrid(ssLib.getPretendScreenshot("../img/sweet.png"))
     print("GRID BEFORE CHANGE")
-    gD.prettyPrintGrid(gD.rgb_to_tile_names(ss))
-    performMatch(ss, gameRunning)
-    time.sleep(0.1)
-    ioFacade.switchFocus()
+    while retryCount != allowedNumberOfRetries:
+        ss = screenshotToGrid(screenshotOfGameGrid())
+        if gD.numberOfUnknownTiles(ss) <= allowedNumberOfUnknowns:
+            gD.prettyPrintGrid(gD.rgb_to_tile_names(ss))
+            performMatch(ss, gameRunning)
+            time.sleep(0.1)
+            ioFacade.switchFocus()
+            time.sleep(0.1)
+            retryCount = 0
+        else:
+            print("Too many unrecognised tiles. Will try again in one second")
+            retryCount = retryCount + 1
+            time.sleep(1)

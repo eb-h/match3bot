@@ -54,5 +54,15 @@ def prettyPrintGrid(grid):
 def copyList(li):
     return list(li)
 
+
+def numberOfUnknownTiles(grid, numberOfElements=gridwidth*gridheight):
+    rgbGrid = rgb_to_tile_names(grid)
+    numberOfUnknowns = numberOfElements
+    for element in rgbGrid:
+        for key in tileColors.iterkeys():
+            if element == key:
+                numberOfUnknowns = numberOfUnknowns - 1
+    return numberOfUnknowns
+
 if __name__ == '__main__':
     print("tileColors has duplicates? ", tileColorsHasRepeats())
