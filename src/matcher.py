@@ -7,36 +7,24 @@ imagewidth, imageheight = 1000 - originX, 800 - originY
 gameRunning = False
 
 
-# shifting functions can be likely be refactored into one
-def shiftRowByN(grid, rowIndex, shiftSize=1, rowWidth=data.gridwidth, colHeight=data.gridheight):
-    """ Performs leftward shift """
+def shiftByN(grid, lineIndex, isRow=False, shiftSize=1, rowWidth=data.gridwidth, colHeight=data.gridheight):
     # ensure all indexes are addressable in list
     assert(len(grid) >= rowWidth*colHeight)
 
     gridCopy = data.copyList(grid)
-    # CURRENTLY n^2 when it should be 2*n
-    # Eric please please please fix this before showing people
-    for shift in range(shiftSize):
-        temp = gridCopy[rowIndex*rowWidth]
-        for i in range(rowWidth - 1):
-            gridCopy[rowIndex*rowWidth+i] = gridCopy[rowIndex*rowWidth+i+1]
-        gridCopy[(rowIndex+1)*rowWidth-1] = temp
-    return gridCopy
 
-
-def shiftColByN(grid, colIndex, shiftSize=1, rowWidth=data.gridwidth, colHeight=data.gridheight):
-    """ Performs upward shift """
-    # ensure all indexes are addressable in list
-    assert(len(grid) >= rowWidth*colHeight)
-
-    gridCopy = data.copyList(grid)
-    # CURRENTLY n^2 when it should be 2*n
-    # Eric please please please fix this before showing people
-    for shift in range(shiftSize):
-        temp = gridCopy[colIndex]
-        for i in range(colHeight - 1):
-            gridCopy[colIndex+rowWidth*i] = gridCopy[colIndex+rowWidth*(i+1)]
-        gridCopy[colIndex+(colHeight-1)*rowWidth] = temp
+    if isRow:
+        for shift in range(shiftSize):
+            temp = gridCopy[lineIndex]
+            for i in range(colHeight - 1):
+                gridCopy[lineIndex+rowWidth*i] = gridCopy[lineIndex+rowWidth*(i+1)]
+            gridCopy[lineIndex+(colHeight-1)*rowWidth] = temp
+    else:
+        for shift in range(shiftSize):
+            temp = gridCopy[lineIndex*rowWidth]
+            for i in range(rowWidth - 1):
+                gridCopy[lineIndex*rowWidth+i] = gridCopy[lineIndex*rowWidth+i+1]
+            gridCopy[(lineIndex+1)*rowWidth-1] = temp
     return gridCopy
 
 
@@ -94,9 +82,10 @@ def findMatch(grid, rowWidth=data.gridwidth, colHeight=data.gridheight):
     
     for row in reversed(range(colHeight)):
         for pos in range(rowWidth - 1):
-            alteredCopyOfGrid = shiftRowByN(data.copyList(grid),
-                    row,
-                    pos+1)  # don't bother checking unaltered state for match
+            alteredCopyOfGrid = shiftByN(grid=data.copyList(grid),
+                    lineIndex=row,
+                    isRow=False,
+                    shiftSize=pos+1)  # don't bother checking unaltered state for match
                             # Should really make sure I am checking every 
                             # pos that I think I am
             #print("CURRENT FORM OF GRID COPY", "row", row, "pos", pos)
@@ -112,9 +101,10 @@ def findMatch(grid, rowWidth=data.gridwidth, colHeight=data.gridheight):
     # Then check the set of vertical shifts for possible matches
     for col in range(rowWidth):
         for pos in range(colHeight - 1):
-            alteredCopyOfGrid = shiftColByN(data.copyList(grid),
-                    col,
-                    pos+1)  # don't bother checking unaltered state for match
+            alteredCopyOfGrid = shiftByN(grid=data.copyList(grid),
+                    lineIndex=col,
+                    isRow=True,
+                    shiftSize=pos+1)  # don't bother checking unaltered state for match
                             # Should really make sure I am checking every 
                             # pos that I think I am
             #print("CURRENT FORM OF GRID COPY", "row", row, "pos", pos)
