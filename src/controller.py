@@ -22,9 +22,7 @@ def screenshotToGrid(screenshot):
 
 def performMatch(grid, gameRunning=True):
     matchFound, dragFromTile, dragToTile = matcher.findMatch(grid)
-    print("matchFound: ", matchFound)
-    print("dragFromTile: ", dragFromTile)
-    print("dragToTile: ", dragToTile)
+    print("Match found. Dragging from %s to %s" % (dragFromTile, dragToTile))
     if matchFound and gameRunning:
         ioFacade.autoGuiMouseDrag(
                 ioFacade.getTilePosition(dragFromTile),
